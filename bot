@@ -1,0 +1,44 @@
+from telegram.ext import Updater
+updater = Updater(token='1903395078:AAHMZSTk-7RyCBh-tpjtuCwkItvXZ3qusP8', use_context=True)
+dispatcher = updater.dispatcher
+import logging
+logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+                     level=logging.INFO)
+def start(update, context):
+    context.bot.send_message(chat_id=update.effective_chat.id, text="Que paso, para que das start si no sabes!")
+from telegram.ext import CommandHandler
+start_handler = CommandHandler('start', start)
+dispatcher.add_handler(start_handler)
+
+def echo(update, context):
+    context.bot.send_message(chat_id=update.effective_chat.id, text=update.message.text)
+
+from telegram.ext import MessageHandler, Filters
+echo_handler = MessageHandler(Filters.text & (~Filters.command), echo)
+dispatcher.add_handler(echo_handler)
+def caps(update, context):
+    text_caps = ' '.join(context.args).upper()
+    context.bot.send_message(chat_id=update.effective_chat.id, text=text_caps)
+
+caps_handler = CommandHandler('caps', caps)
+dispatcher.add_handler(caps_handler)
+from  telegram  import  InlineQueryResultArticle , InputTextMessageContent 
+def  inline_caps ( actualización , contexto ):
+     consulta  =  actualización . inline_query . consulta 
+    si  no  consulta :
+         devuelve 
+    resultados  =  lista ()
+     resultados . append (
+         InlineQueryResultArticle (
+             id = query . upper (),
+             title = 'Caps',
+             input_message_content = InputTextMessageContent ( consulta . upper ()) 
+        ) 
+    ) contexto . bot . answer_inline_query ( actualización . inline_query . id , resultados ) de telegram . ext importación InlineQueryHandler inline_caps_handler = InlineQueryHandler ( inline_caps )
+ despachador . add_handler ( inline_caps_handler )
+def unknown(update, context):
+    context.bot.send_message(chat_id=update.effective_chat.id, text="Sorry, I didn't understand that command.")
+
+unknown_handler = MessageHandler(Filters.command, unknown)
+dispatcher.add_handler(unknown_handler)
+    
